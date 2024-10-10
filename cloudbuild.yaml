@@ -1,0 +1,25 @@
+steps:
+  - name: 'python:3.11'  
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        pip install -r requirements.txt
+
+  - name: 'gcr.io/cloud-builders/gcloud' # Specifies the Docker image used for this build step and contains the gcloud CLI 
+    args:
+      - 'functions' # Tells gcloud to use the Cloud Functions service
+      - 'deploy' # Tells gcloud that you want to deploy a new Cloud Function or update an existing one
+      - 'slack-welcome' # The name of the Cloud Function
+      - '--runtime'
+      - 'python311'
+      - '--trigger-http'
+      - '--entry-point'
+      - 'welcome_app'  # Entry point function name in main.py
+      - '--source'
+      - '.'  # Use current directory as the source
+      - '--region'
+      - 'europe-west3'  
+      - '--allow-unauthenticated'
+
+timeout: 900s  # Adjust timeout as needed, 900 seconds is 15 minutes
