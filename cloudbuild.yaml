@@ -10,7 +10,7 @@ steps:
     args:
       - 'functions' # Tells gcloud to use the Cloud Functions service
       - 'deploy' # Tells gcloud that you want to deploy a new Cloud Function or update an existing one
-      - 'slack-welcome' # The name of the Cloud Function
+      - 'slack-welcome-v2' # The name of the Cloud Function
       - '--runtime'
       - 'python311'
       - '--trigger-http'
