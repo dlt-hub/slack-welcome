@@ -23,6 +23,6 @@ steps:
       - '--allow-unauthenticated'
 
 options:
-  logging: CLOUD_LOGGING_ONLY # This was needed because we're using a service account
+  logging: NONE # This was needed because we're using a service account
 
 timeout: 900s  # Adjust timeout as needed, 900 seconds is 15 minutes
