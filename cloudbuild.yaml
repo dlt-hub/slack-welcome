@@ -22,7 +22,8 @@ steps:
       - 'europe-west3'  
       - '--allow-unauthenticated'
 
-#options:
+options:
 #  logging: CLOUD_LOGGING_ONLY # This was needed because we're using a service account
+  logsBucket: gs://slack-messaging-bot/build-logs/ # Replace <your-logs-bucket> with the name of your GCS bucket for logs.
 
 timeout: 900s  # Adjust timeout as needed, 900 seconds is 15 minutes
