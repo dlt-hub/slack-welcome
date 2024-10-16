@@ -5,3 +5,4 @@ dlt[bigquery]
 google-api-python-client
 google-cloud-storage
 websockets
+google-cloud-bigquery-storage

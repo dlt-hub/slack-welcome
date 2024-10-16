@@ -4,7 +4,6 @@ steps:
     args:
       - '-c'
       - 'pip install -r requirements.txt'
-      - 
 
   - name: 'gcr.io/cloud-builders/gcloud' # Specifies the Docker image used for this build step and contains the gcloud CLI 
     args:
@@ -22,9 +21,6 @@ steps:
       - 'europe-west3'  
       - '--allow-unauthenticated'
 
-logsBucket: gs://slack-messaging-bot/build-logs/ # Replace <your-logs-bucket> with the name of your GCS bucket for logs.
-
-#options:
-#  logging: CLOUD_LOGGING_ONLY # This was needed because we're using a service account
+logsBucket: gs://slack-messaging-bot/build-logs/ # The build logs will be written to this bucket in the specified directory. This bucket also contains the idx used by the tagger
 
 timeout: 900s  # Adjust timeout as needed, 900 seconds is 15 minutes
