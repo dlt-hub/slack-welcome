@@ -104,7 +104,7 @@ def handle_message_event(ack, body, botclient, bqclient):
         query_parameters = [
             bigquery.ScalarQueryParameter("channel_id", "STRING", channel_id),
             bigquery.ScalarQueryParameter("message_time", "STRING", message_time),
-            bigquery.ScalarQueryParameter("message", "STRING", message_text),
+            bigquery.ScalarQueryParameter("message_text", "STRING", message_text),
             bigquery.ScalarQueryParameter("user_id", "STRING", user_id),
         ]
 
