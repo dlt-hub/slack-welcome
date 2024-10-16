@@ -85,7 +85,7 @@ def handle_message_event(ack, body, botclient, bqclient):
     if channel_id in ["C05C42YJ355", "C04DQA7JJN6", "C05CJEDHG2F", "C05QFC7BCGK", "C07R1362X0D"]: # sharing-and-contributing, technical-help, discussions, introduce-yourself, anuuns-debug-channel
         message_text = body['event']['text']
         user_id = body["event"]["user"]
-        message_time = datetime.fromtimestamp(body["event_time"])
+        message_time = datetime.fromtimestamp(body["event_time"]).isoformat()
         user_info = botclient.users_info(user=user_id).data
         user_name = user_info['user']['real_name']
         user_firstname = user_info['user']['profile']['first_name']
