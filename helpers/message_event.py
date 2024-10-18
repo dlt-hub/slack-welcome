@@ -149,7 +149,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-    if channel_id in ["C07R1362X0D"]: #annuns-debug-channel
+    if channel_id in ["C04DQA7JJN6"]: #technical-help
 
         message_ts = body['event'].get('thread_ts', None)
 
@@ -180,7 +180,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
                     message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
                     botclient.chat_postMessage(
-                        channel="C07R1362X0D", #community_support-channel
+                        channel="C06R5BSRWRH", #community_support-channel
                         text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n" + conditions_met 
                     )
 

@@ -13,7 +13,7 @@ def identify_icp(row):
     estimated_num_employees = row[1]
 
     if not pd.isna(estimated_num_employees) :
-        if int(estimated_num_employees) >= 10:
+        if int(estimated_num_employees) >= 200:
             icp_flag = True
             icp_conditions += "Estimated company size: {}".format(estimated_num_employees)
     #add any number of conditions here
