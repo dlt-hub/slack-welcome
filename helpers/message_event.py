@@ -1,6 +1,5 @@
 import dlt
 
-
 from datetime import datetime
 from google.cloud import bigquery
 
@@ -9,6 +8,7 @@ import asyncio
 from helpers.enrichment import enrich_user
 from helpers.dhelp import ask_dhelp
 from helpers.roster import slack_messaging_roster
+from helpers.icp import identify_icp
 
 def handle_message_event(ack, body, botclient, bqclient):
     """
@@ -147,5 +147,32 @@ def handle_message_event(ack, body, botclient, bqclient):
             )
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
+
+        else:
+
+            message_ts = body['event'].get('thread_ts', None)
+
+            #not part of a thread, only for original messages
+            if message_ts is None:
+                message_ts = body['event']['ts']
+
+                #query enriched data for identifying ICP
+                query = """
+                    SELECT slack_user_id, person__organization__estimated_num_employees
+                        FROM `dlthub-analytics.rahul_enriched_users.enriched_users`
+                """
+                enrichment_read_query_job = bqclient.query(query)
+                enrichment_read_query_job.result().to_rows() # This ensures the query has completed
+                row = enrichment_read_query_job.result().to_rows()
+
+                icp_flag, conditions_met = identify_icp(row)
+
+                if icp_flag:
+
+                    message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
+                    botclient.chat_postMessage(
+                        channel="C07R1362X0D", #anuuns-debug-channel
+                        text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n" + conditions_met 
+                    )
 
     return 'OK', 200
