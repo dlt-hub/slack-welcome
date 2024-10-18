@@ -4,8 +4,8 @@ def identify_icp(row):
     If True, also returns conditions they met as a str, "" if False
     """
 
-    slack_user_id = row[0].slack_user_id
-    estimated_num_employees = row[0].person__organization__estimated_num_employees
+    slack_user_id = row[0]
+    estimated_num_employees = row[1]
 
     icp_flag = False
     icp_conditions = "Met the following criteria:\n\n"

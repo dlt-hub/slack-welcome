@@ -71,15 +71,16 @@ def handle_message_event(ack, body, botclient, bqclient):
                 text=final_response
             )
 
-            # Tag a student in community support channel (incl. Alena and Adrian on Mondays)
-            id_and_email = slack_messaging_roster()
-            if id_and_email is not None:
-                employee_id = id_and_email[0]
-                message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
-                botclient.chat_postMessage(
-                     channel="C06R5BSRWRH", #community-spport channel
-                     text=f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>..."
-                )
+            if channel_id != "C07R1362X0D":
+                # Tag a student in community support channel (incl. Alena and Adrian on Mondays)
+                id_and_email = slack_messaging_roster()
+                if id_and_email is not None:
+                    employee_id = id_and_email[0]
+                    message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
+                    botclient.chat_postMessage(
+                        channel="C06R5BSRWRH", #community-spport channel
+                        text=f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>..."
+                    )
 
                 
     if channel_id in ["C05C42YJ355", "C04DQA7JJN6", "C05CJEDHG2F", "C05QFC7BCGK", "C07R1362X0D"]: # sharing-and-contributing, technical-help, discussions, introduce-yourself, anuuns-debug-channel
@@ -148,24 +149,26 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-        else:
 
-            message_ts = body['event'].get('thread_ts', None)
+        message_ts = body['event'].get('thread_ts', None)
 
-            #not part of a thread, only for original messages
-            if message_ts is None:
-                message_ts = body['event']['ts']
+        #not part of a thread, only for original messages
+        if message_ts is None:
+            message_ts = body['event']['ts']
 
-                #query enriched data for identifying ICP
-                query = """
-                    SELECT slack_user_id, person__organization__estimated_num_employees
-                        FROM `dlthub-analytics.rahul_enriched_users.enriched_users`
-                """
-                enrichment_read_query_job = bqclient.query(query)
-                enrichment_read_query_job.result().to_rows() # This ensures the query has completed
-                row = enrichment_read_query_job.result().to_rows()
+            #query enriched data for identifying ICP
+            query = """
+                SELECT slack_user_id, person__organization__estimated_num_employees
+                    FROM `dlthub-analytics.rahul_enriched_users.enriched_users`
+            """
+            enrichment_read_query_job = bqclient.query(query)
+            output = enrichment_read_query_job.result().to_dataframe()
 
-                icp_flag, conditions_met = identify_icp(row)
+            if output.shape[0]>0:
+
+                first_row = output.loc[0, :].values.flatten().tolist()
+
+                icp_flag, conditions_met = identify_icp(first_row)
 
                 if icp_flag:
 
