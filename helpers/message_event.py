@@ -162,7 +162,11 @@ def handle_message_event(ack, body, botclient, bqclient):
                     FROM `dlthub-analytics.rahul_enriched_users.enriched_users`
                     where slack_user_id=@user_id;
             """
-            enrichment_read_query_job = bqclient.query(query)
+            query_parameters = [
+                    bigquery.ScalarQueryParameter("user_id", "STRING", user_id),
+                ]
+            
+            enrichment_read_query_job = bqclient.query(query, job_config=bigquery.QueryJobConfig(query_parameters=query_parameters))
             output = enrichment_read_query_job.result().to_dataframe()
 
             if output.shape[0]>0:
