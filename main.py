@@ -49,7 +49,7 @@ bqclient = bigquery.Client()
 # Handle joins
 @app.event("member_joined_channel")
 def join(ack, body):
-    return handle_join_event(ack, body, botclient, bqclient)
+    return handle_join_event(ack, body, botclient)
 
 
 # Handle messages
