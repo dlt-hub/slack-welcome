@@ -164,6 +164,8 @@ def handle_message_event(ack, body, botclient, bqclient):
             enrichment_read_query_job = bqclient.query(query)
             output = enrichment_read_query_job.result().to_dataframe()
 
+            print(output)
+
             if output.shape[0]>0:
 
                 first_row = output.loc[0, :].values.flatten().tolist()

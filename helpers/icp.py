@@ -1,12 +1,8 @@
-import logging
-
 def identify_icp(row):
     """
     For given enriched user data, returns True/False for whether person is an ICP
     If True, also returns conditions they met as a str, "" if False
     """
-
-    logging.info(' '.join(row))
 
     slack_user_id = row[0]
     estimated_num_employees = row[1]
