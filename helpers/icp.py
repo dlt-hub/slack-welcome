@@ -10,9 +10,10 @@ def identify_icp(row):
     icp_flag = False
     icp_conditions = "Met the following criteria:\n\n"
 
-    if estimated_num_employees > 10:
-        icp_flag = True
-        icp_conditions += "Estimated company size: {}".format(estimated_num_employees)
+    if estimated_num_employees :
+        if int(estimated_num_employees) > 10:
+            icp_flag = True
+            icp_conditions += "Estimated company size: {}".format(estimated_num_employees)
     #add any number of conditions here
 
     return icp_flag, icp_conditions
