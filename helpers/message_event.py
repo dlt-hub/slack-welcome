@@ -160,11 +160,10 @@ def handle_message_event(ack, body, botclient, bqclient):
             query = """
                 SELECT slack_user_id, person__organization__estimated_num_employees
                     FROM `dlthub-analytics.rahul_enriched_users.enriched_users`
+                    where user_id=@user_id;
             """
             enrichment_read_query_job = bqclient.query(query)
             output = enrichment_read_query_job.result().to_dataframe()
-
-            print(output)
 
             if output.shape[0]>0:
 
