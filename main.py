@@ -52,6 +52,10 @@ def welcome_app(req: Request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
+    # Log the incoming request for debugging
+    print("Received request headers:", req.headers)
+    print("Received request body:", req.data.decode('utf-8'))
+
     if "X-Slack-Retry-Num" in req.headers:
         return "OK", 200
     else:
