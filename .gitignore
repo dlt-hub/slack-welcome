@@ -1,2 +1,4 @@
 myenv/
 service_account_file.json
+.env
+__pycache__/
