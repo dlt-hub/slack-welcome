@@ -1,31 +1,14 @@
-import base64
-import dlt
-import json
 import logging
 import os
-import pendulum
-import random
-import requests
-import time
 
-from datetime import datetime, timedelta, timezone
-from slack_bolt import App
-from slack_sdk import WebClient
-from slack_bolt.adapter.google_cloud_functions import SlackRequestHandler
 from flask import Request
-from google.cloud import bigquery, storage
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from google.oauth2.credentials import Credentials
-from google.oauth2 import service_account
-
-import asyncio
-import websockets
-import re
+from google.cloud import bigquery
+from slack_bolt import App
+from slack_bolt.adapter.google_cloud_functions import SlackRequestHandler
+from slack_sdk import WebClient
 
 from helpers.join_event import handle_join_event
 from helpers.message_event import handle_message_event
-
 
 # Setup logging
 logging.basicConfig(level=logging.DEBUG)
@@ -37,7 +20,7 @@ userclient = WebClient(token=os.environ["SLACK_USER_TOKEN"])
 app = App(
     token=os.environ["SLACK_BOT_TOKEN"],
     signing_secret=os.environ["SLACK_SIGNING_SECRET"],
-    process_before_response=True
+    process_before_response=True,
 )
 handler = SlackRequestHandler(app)
 
@@ -70,6 +53,6 @@ def welcome_app(req: Request):
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
     if "X-Slack-Retry-Num" in req.headers:
-        return 'OK', 200
+        return "OK", 200
     else:
         return handler.handle(req)
