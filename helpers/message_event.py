@@ -163,7 +163,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-    if channel_id in [technical_help_channel, discussions_channel, introduce_yourself_channel, anuuns_debug_channel]:
+    if channel_id in [technical_help_channel, discussions_channel, introduce_yourself_channel]:
 
         message_ts = body["event"].get("thread_ts", None)
 
@@ -205,14 +205,13 @@ def handle_message_event(ack, body, botclient, bqclient):
                     
                     botclient.chat_postMessage(
                         channel=icp_support_channel,
-                        text="Test message"
-                        # text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n<@D07PRCSFGP6> <@D07PG9756P8>"
-                        # + conditions_met,
+                        text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n<@D07PRCSFGP6> <@D07PG9756P8>"
+                        + conditions_met,
                     )
 
     if cs_notify:
         botclient.chat_postMessage(
-            channel=anuuns_debug_channel,
+            channel=community_support_channel,
             text=cs_message_text
         )
 
