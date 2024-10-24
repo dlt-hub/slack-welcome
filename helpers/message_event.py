@@ -16,7 +16,7 @@ community_support_channel = "C06R5BSRWRH"
 sharing_and_contributing_channel = "C05C42YJ355"
 discussions_channel = "C05CJEDHG2F"
 introduce_yourself_channel = "C05QFC7BCGK"
-
+icp_support_channel = "C07T8JTCY76"
 
 def handle_message_event(ack, body, botclient, bqclient):
     """
@@ -27,6 +27,9 @@ def handle_message_event(ack, body, botclient, bqclient):
     """
 
     channel_id = body["event"]["channel"]
+
+    cs_message_text = ""
+    cs_notify = False
 
     if channel_id == technical_help_channel or channel_id == anuuns_debug_channel:
         message_text = body["event"]["text"]
@@ -78,16 +81,18 @@ def handle_message_event(ack, body, botclient, bqclient):
                 channel=channel_id, thread_ts=message_ts, text=final_response
             )
 
-            if channel_id != anuuns_debug_channel:
+            if True:#channel_id != anuuns_debug_channel:
                 # Tag a student in community support channel (incl. Alena and Adrian on Mondays)
                 id_and_email = slack_messaging_roster()
                 if id_and_email is not None:
                     employee_id = id_and_email[0]
                     message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
-                    botclient.chat_postMessage(
-                        channel=community_support_channel,
-                        text=f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>...",
-                    )
+                    cs_message_text += f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>..."
+                    cs_notify = True
+                    # botclient.chat_postMessage(
+                    #     channel=community_support_channel,
+                    #     text=f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>...",
+                    # )
 
     if channel_id in [
         sharing_and_contributing_channel,
@@ -162,7 +167,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-    if channel_id in [technical_help_channel]:
+    if channel_id in [technical_help_channel, anuuns_debug_channel]:
 
         message_ts = body["event"].get("thread_ts", None)
 
@@ -195,10 +200,23 @@ def handle_message_event(ack, body, botclient, bqclient):
                 if icp_flag:
 
                     message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
+                    
+                    if cs_notify:
+                        cs_message_text += f"\n\nThe person is an ICP.\n\n" + conditions_met
+                    else:
+                        cs_message_text += f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n" + conditions_met
+                        cs_notify = True
+                    
                     botclient.chat_postMessage(
-                        channel=community_support_channel,
+                        channel=anuuns_debug_channel,
                         text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n"
                         + conditions_met,
                     )
+
+    if cs_notify:
+        botclient.chat_postMessage(
+            channel=anuuns_debug_channel,
+            text=cs_message_text
+        )
 
     return "OK", 200
