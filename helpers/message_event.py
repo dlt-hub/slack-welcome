@@ -81,7 +81,7 @@ def handle_message_event(ack, body, botclient, bqclient):
                 channel=channel_id, thread_ts=message_ts, text=final_response
             )
 
-            if True:#channel_id != anuuns_debug_channel:
+            if channel_id != anuuns_debug_channel:
                 # Tag a student in community support channel (incl. Alena and Adrian on Mondays)
                 id_and_email = slack_messaging_roster()
                 if id_and_email is not None:
@@ -89,10 +89,6 @@ def handle_message_event(ack, body, botclient, bqclient):
                     message_link = f"https://dlthub-community.slack.com/archives/{channel_id}/p{message_ts.replace('.', '')}"
                     cs_message_text += f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>..."
                     cs_notify = True
-                    # botclient.chat_postMessage(
-                    #     channel=community_support_channel,
-                    #     text=f"Hey <@{employee_id}>, you might want to reply to <{message_link}|this message>...",
-                    # )
 
     if channel_id in [
         sharing_and_contributing_channel,
@@ -208,14 +204,14 @@ def handle_message_event(ack, body, botclient, bqclient):
                         cs_notify = True
                     
                     botclient.chat_postMessage(
-                        channel=anuuns_debug_channel,
+                        channel=icp_support_channel,
                         text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n"
                         + conditions_met,
                     )
 
     if cs_notify:
         botclient.chat_postMessage(
-            channel=anuuns_debug_channel,
+            channel=community_support_channel,
             text=cs_message_text
         )
 
