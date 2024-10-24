@@ -2,20 +2,24 @@
 
 ## How it works
 
-TODO
+`main.py` contains the entry point and distributes the events to the handlers. In the `helpers` folder, there are various functionalities that are used by the handler functions. Everything is more or less well-commented, so feel free to check out the individual files if you'd like... 👀
 
 ## Testing
 To test the Slackbot locally, follow these steps:
 
-### 1. Run `test_local.py`
+### 1. Prepare secrets
+Since the secrets for the Cloud Function are stored in the Variables menu in the console, you'll need to set them explicitly for local testing. First, save the secret variables from GCP to an `.env` file, then save the service account file as `service_account_file.json`.
+
+### 2. Run `test_local.py`
 
 The `test_local.py` script sets up the local Flask server that simulates the Slackbot environment.
 
 ```python
 python test_local.py
 ```
+> You'll need to have `ngork` installed.
 
-### 2. Set up ngrok for public access
+### 3. Set up ngrok for public access
 
 This will create a public URL that forwards traffic to your local Flask server.
 
@@ -24,7 +28,7 @@ ngrok http 3000
 ```
 This will provide a public forwarding URL (e.g., https://<ngrok-id>.ngrok.io) that can be used to temporarily redirect Slack events to your local server.
 
-### 3. Temporarily change the slack app's subscription endpoint
+### 4. Temporarily change the slack app's subscription endpoint
 
 Under `Event Subscriptions` in your Slack app’s settings, update the Request URL to the ngrok URL:
 
