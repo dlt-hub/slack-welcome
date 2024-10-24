@@ -163,7 +163,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-    if channel_id in [technical_help_channel, anuuns_debug_channel]:
+    if channel_id in [technical_help_channel, discussions_channel, introduce_yourself_channel]:
 
         message_ts = body["event"].get("thread_ts", None)
 
@@ -199,13 +199,13 @@ def handle_message_event(ack, body, botclient, bqclient):
                     
                     if cs_notify:
                         cs_message_text += f"\n\nThe person is an ICP.\n\n" + conditions_met
-                    else:
-                        cs_message_text += f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n" + conditions_met
-                        cs_notify = True
+                    # else:
+                    #     cs_message_text += f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n" + conditions_met
+                    #     cs_notify = True
                     
                     botclient.chat_postMessage(
                         channel=icp_support_channel,
-                        text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n"
+                        text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n<@D07PRCSFGP6> <@D07PG9756P8>"
                         + conditions_met,
                     )
 
