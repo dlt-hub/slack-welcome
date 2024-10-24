@@ -163,7 +163,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
             enrichment_pipeline.run([enrichment_data], table_name="enriched_users")
 
-    if channel_id in [technical_help_channel, discussions_channel, introduce_yourself_channel]:
+    if channel_id in [technical_help_channel, discussions_channel, introduce_yourself_channel, anuuns_debug_channel]:
 
         message_ts = body["event"].get("thread_ts", None)
 
@@ -211,7 +211,7 @@ def handle_message_event(ack, body, botclient, bqclient):
 
     if cs_notify:
         botclient.chat_postMessage(
-            channel=community_support_channel,
+            channel=anuuns_debug_channel,
             text=cs_message_text
         )
 
