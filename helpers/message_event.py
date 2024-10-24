@@ -205,8 +205,9 @@ def handle_message_event(ack, body, botclient, bqclient):
                     
                     botclient.chat_postMessage(
                         channel=icp_support_channel,
-                        text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n<@D07PRCSFGP6> <@D07PG9756P8>"
-                        + conditions_met,
+                        text="Test message"
+                        # text=f"An ICP just sent a message, you might want to reply to <{message_link}|this message>...\n\n<@D07PRCSFGP6> <@D07PG9756P8>"
+                        # + conditions_met,
                     )
 
     if cs_notify:
